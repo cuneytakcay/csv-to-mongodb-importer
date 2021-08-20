@@ -36,7 +36,7 @@ const questions = [
 	},
 	{
 		name: 'dbUrl',
-		message: 'Type your database host address:',
+		message: 'Type your database connection string:',
 		type: 'input',
 		when: answers => !answers.localhost,
 	},
