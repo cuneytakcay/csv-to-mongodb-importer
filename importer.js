@@ -1,6 +1,7 @@
 const inquirer = require('inquirer')
 const mongodb = require('mongodb').MongoClient
-const csvtojson = require('csvtojson')
+const csv = require('csv-parser')
+const fs = require('fs')
 
 const validateInput = input => {
 	const pass = input.match(/^[a-zA-Z0-9_]+$/)
@@ -16,18 +17,21 @@ const questions = [
 		name: 'database',
 		message: 'Name your database:',
 		type: 'input',
+		default: 'kmap_db',
 		validate: validateInput,
 	},
 	{
 		name: 'collection',
 		message: 'Name your collection:',
 		type: 'input',
+		default: 'personnel',
 		validate: validateInput,
 	},
 	{
 		name: 'csvPath',
 		message: 'Type the path to your csv file that you want to import:',
 		type: 'input',
+		default: 'data.csv',
 	},
 	{
 		name: 'localhost',
@@ -48,9 +52,19 @@ inquirer.prompt(questions).then(answers => {
 	const csvPath = answers.csvPath
 	const dbUrl = answers.dbUrl || 'mongodb://localhost:27017'
 
-	csvtojson()
-		.fromFile(csvPath)
-		.then(csvData => {
+	const csvData = []
+
+	// Read and format csv headers then import to MongoDB
+	fs.createReadStream(csvPath)
+		.pipe(
+			csv({
+				// Format csv headers
+				mapHeaders: ({ header, index }) =>
+					header.trim().replace(' ', '_').toLowerCase(),
+			})
+		)
+		.on('data', data => csvData.push(data))
+		.on('end', () => {
 			mongodb.connect(
 				dbUrl,
 				{ useNewUrlParser: true, useUnifiedTopology: true },
