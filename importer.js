@@ -17,21 +17,18 @@ const questions = [
 		name: 'database',
 		message: 'Name your database:',
 		type: 'input',
-		default: 'kmap_db',
 		validate: validateInput,
 	},
 	{
 		name: 'collection',
 		message: 'Name your collection:',
 		type: 'input',
-		default: 'personnel',
 		validate: validateInput,
 	},
 	{
 		name: 'csvPath',
 		message: 'Type the path to your csv file that you want to import:',
 		type: 'input',
-		default: 'data.csv',
 	},
 	{
 		name: 'localhost',
