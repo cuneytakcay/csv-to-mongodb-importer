@@ -49,7 +49,7 @@ inquirer.prompt(questions).then(answers => {
 	const csvPath = answers.csvPath
 	const dbUrl = answers.dbUrl || 'mongodb://localhost:27017'
 
-	const csvData = []
+	let csvData = []
 
 	// Read and format csv headers then import to MongoDB
 	fs.createReadStream(csvPath)
